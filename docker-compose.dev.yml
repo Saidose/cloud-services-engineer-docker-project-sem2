@@ -1,0 +1,40 @@
+# Дев окружение
+
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    image: momo-backend:dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend:/src
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    image: momo-frontend:dev
+    ports:
+      - "8080:8080"
+    environment:
+      VUE_APP_API_URL: "http://localhost:8081"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - frontend-net
+      - backend-net
+    restart: unless-stopped
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
