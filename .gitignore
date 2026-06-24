@@ -17,3 +17,8 @@ vendor/
 .vscode/
 .DS_Store
 *.tgz
+
+# Игнорим энвы и секреты
+secrets/*.local
+.env
+.env.local

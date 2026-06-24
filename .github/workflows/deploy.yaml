@@ -42,3 +42,49 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Build via Docker Compose
         uses: hoverkraft-tech/compose-action@v2.2.0
+
+  # Скан с Trivy
+
+  scan_images_with_trivy:
+    name: Scan images with Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build backend image (local)
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend/
+          push: false
+          load: true
+          tags: momo-backend:scan
+
+      - name: Build frontend image (local)
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend/
+          push: false
+          load: true
+          tags: momo-frontend:scan
+
+      - name: Scan backend image
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: momo-backend:scan
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "0"   # сообщаем об уязвимостях, но не валим пайплайн
+
+      - name: Scan frontend image
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: momo-frontend:scan
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "0"

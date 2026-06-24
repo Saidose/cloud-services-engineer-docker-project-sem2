@@ -1,0 +1,13 @@
+.git
+.gitignore
+.gitattributes
+*.md
+Dockerfile
+.dockerignore
+docker-compose*.yml
+*.test
+*.out
+coverage*
+.idea
+.vscode
+.DS_Store
