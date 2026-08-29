@@ -9,6 +9,7 @@ jobs:
   build_and_push_to_docker_hub:
       name: Push Docker image to DockerHub
       runs-on: ubuntu-latest
+      needs: scan_images_with_trivy
       steps:
         - name: Check out the repo
           uses: actions/checkout@v3
@@ -78,7 +79,8 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: momo-backend:scan
-          format: table
+          format: json
+          output: reports/trivy-backend.json
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: "0"   # сообщаем об уязвимостях, но не валим пайплайн
@@ -87,7 +89,8 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: momo-frontend:scan
-          format: table
+          format: json
+          output: reports/trivy-frontend.json
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: "0"
+          exit-code: "0"   # сообщаем об уязвимостях, но не валим пайплайн
