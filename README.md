@@ -4,6 +4,8 @@
 фронтенд на Vue.js), оркестрация через Docker Compose и обеспечение безопасности
 образов и контейнеров.
 
+Push workflow.
+
 - **backend** — API на Go (`go-chi`), слушает `:8081`, эндпоинт `/health`.
 - **frontend** — SPA на Vue.js, в проде отдаётся через nginx и проксирует API на бэкенд.
 
